@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Product.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-ecommerce</a> &gt; <a href="index.source.html" class="el_package">com.ecom.ecommerce.entity</a> &gt; <span class="el_source">Product.java</span></div><h1>Product.java</h1><pre class="source lang-java linenums">package com.ecom.ecommerce.entity;
+
+import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
+
+@Entity
+@Table(name=&quot;product&quot;)
+<span class="pc bnc" id="L13" title="All 84 branches missed.">@Data</span>
+public class Product {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;id&quot;)
+<span class="nc" id="L19">    private Long id;</span>
+
+    @ManyToOne
+    @JoinColumn(name = &quot;category_id&quot;, nullable = false)
+<span class="nc" id="L23">    private ProductCategory category;</span>
+
+    @Column(name = &quot;sku&quot;)
+<span class="nc" id="L26">    private String sku;</span>
+
+    @Column(name = &quot;name&quot;)
+<span class="nc" id="L29">    private String name;</span>
+
+    @Column(name = &quot;description&quot;)
+<span class="nc" id="L32">    private String description;</span>
+
+    @Column(name = &quot;unit_price&quot;)
+<span class="nc" id="L35">    private BigDecimal unitPrice;</span>
+
+    @Column(name = &quot;image_url&quot;)
+<span class="nc" id="L38">    private String imageUrl;</span>
+
+    @Column(name = &quot;active&quot;)
+<span class="nc" id="L41">    private boolean active;</span>
+
+    @Column(name = &quot;units_in_stock&quot;)
+<span class="nc" id="L44">    private int unitsInStock;</span>
+
+    @Column(name = &quot;date_created&quot;)
+    @CreationTimestamp
+<span class="nc" id="L48">    private Date dateCreated;</span>
+
+    @Column(name = &quot;last_updated&quot;)
+    @UpdateTimestamp
+<span class="nc" id="L52">    private Date lastUpdated;</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

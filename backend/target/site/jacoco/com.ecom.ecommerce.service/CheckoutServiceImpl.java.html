@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CheckoutServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-ecommerce</a> &gt; <a href="index.source.html" class="el_package">com.ecom.ecommerce.service</a> &gt; <span class="el_source">CheckoutServiceImpl.java</span></div><h1>CheckoutServiceImpl.java</h1><pre class="source lang-java linenums">package com.ecom.ecommerce.service;
+
+import com.ecom.ecommerce.dao.CustomerRepository;
+import com.ecom.ecommerce.dto.PaymentInfo;
+import com.ecom.ecommerce.dto.Purchase;
+import com.ecom.ecommerce.dto.PurchaseResponse;
+import com.ecom.ecommerce.entity.Customer;
+import com.ecom.ecommerce.entity.Order;
+import com.ecom.ecommerce.entity.OrderItem;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.*;
+
+@Service
+public class CheckoutServiceImpl implements CheckoutService {
+
+    private CustomerRepository customerRepository;
+
+    public CheckoutServiceImpl(CustomerRepository customerRepository,
+<span class="fc" id="L25">                               @Value(&quot;${stripe.key.secret}&quot;) String secretKey) {</span>
+
+<span class="fc" id="L27">        this.customerRepository = customerRepository;</span>
+
+        // initialize Stripe API with secret key
+<span class="fc" id="L30">        Stripe.apiKey = secretKey;</span>
+<span class="fc" id="L31">    }</span>
+
+    @Override
+    @Transactional
+    public PurchaseResponse placeOrder(Purchase purchase) {
+
+        // retrieve the order info from dto
+<span class="nc" id="L38">        Order order = purchase.getOrder();</span>
+
+        // generate tracking number
+<span class="nc" id="L41">        String orderTrackingNumber = generateOrderTrackingNumber();</span>
+<span class="nc" id="L42">        order.setOrderTrackingNumber(orderTrackingNumber);</span>
+
+        // populate order with orderItems
+<span class="nc" id="L45">        Set&lt;OrderItem&gt; orderItems = purchase.getOrderItems();</span>
+<span class="nc" id="L46">        orderItems.forEach(item -&gt; order.add(item));</span>
+
+        // populate order with billingAddress and shippingAddress
+<span class="nc" id="L49">        order.setBillingAddress(purchase.getBillingAddress());</span>
+<span class="nc" id="L50">        order.setShippingAddress(purchase.getShippingAddress());</span>
+
+        // populate customer with order
+<span class="nc" id="L53">        Customer customer = purchase.getCustomer();</span>
+
+        // check if this is an existing customer
+<span class="nc" id="L56">        String theEmail = customer.getEmail();</span>
+
+<span class="nc" id="L58">        Customer customerFromDB = customerRepository.findByEmail(theEmail);</span>
+
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (customerFromDB != null) {</span>
+            // we found them ... let's assign them accordingly
+<span class="nc" id="L62">            customer = customerFromDB;</span>
+        }
+
+<span class="nc" id="L65">        customer.add(order);</span>
+
+        // save to the database
+<span class="nc" id="L68">        customerRepository.save(customer);</span>
+
+        // return a response
+<span class="nc" id="L71">        return new PurchaseResponse(orderTrackingNumber);</span>
+    }
+
+    @Override
+    public PaymentIntent createPaymentIntent(PaymentInfo paymentInfo) throws StripeException {
+
+<span class="nc" id="L77">        List&lt;String&gt; paymentMethodTypes = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L78">        paymentMethodTypes.add(&quot;card&quot;);</span>
+
+<span class="nc" id="L80">        Map&lt;String, Object&gt; params = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L81">        params.put(&quot;amount&quot;, paymentInfo.getAmount());</span>
+<span class="nc" id="L82">        params.put(&quot;currency&quot;, paymentInfo.getCurrency());</span>
+<span class="nc" id="L83">        params.put(&quot;payment_method_types&quot;, paymentMethodTypes);</span>
+<span class="nc" id="L84">        params.put(&quot;description&quot;, &quot;Luv2Shop purchase&quot;);</span>
+<span class="nc" id="L85">        params.put(&quot;receipt_email&quot;, paymentInfo.getReceiptEmail());</span>
+
+<span class="nc" id="L87">        return PaymentIntent.create(params);</span>
+    }
+
+    private String generateOrderTrackingNumber() {
+
+        // generate a random UUID number (UUID version-4)
+        // For details see: https://en.wikipedia.org/wiki/Universally_unique_identifier
+        //
+<span class="nc" id="L95">        return UUID.randomUUID().toString();</span>
+    }
+}
+
+
+
+
+
+
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

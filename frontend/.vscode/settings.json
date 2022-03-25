@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/e2b1867f-2eb3-4584-9f23-ca303780b0e7/resourceGroups/my-ecommerce-app_group/providers/Microsoft.Web/sites/my-ecommerce-app",
+  "appService.deploySubpath": "dist/angular-ecommerce"
+}

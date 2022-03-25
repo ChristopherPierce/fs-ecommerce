@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MyDataRestConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-ecommerce</a> &gt; <a href="index.source.html" class="el_package">com.ecom.ecommerce.config</a> &gt; <span class="el_source">MyDataRestConfig.java</span></div><h1>MyDataRestConfig.java</h1><pre class="source lang-java linenums">package com.ecom.ecommerce.config;
+
+import com.ecom.ecommerce.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
+import org.springframework.http.HttpMethod;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+
+import javax.persistence.EntityManager;
+import javax.persistence.metamodel.EntityType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+@Configuration
+public class MyDataRestConfig implements RepositoryRestConfigurer {
+
+    @Value(&quot;${allowed.origins}&quot;)
+    private String[] theAllowedOrigins;
+
+    private EntityManager entityManager;
+
+    @Autowired
+<span class="fc" id="L27">    public MyDataRestConfig(EntityManager theEntityManager) {</span>
+<span class="fc" id="L28">        entityManager = theEntityManager;</span>
+<span class="fc" id="L29">    }</span>
+
+
+    @Override
+    public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
+
+<span class="fc" id="L35">        HttpMethod[] theUnsupportedActions = {HttpMethod.PUT, HttpMethod.POST,</span>
+                                              HttpMethod.DELETE, HttpMethod.PATCH};
+
+        // disable HTTP methods for ProductCategory: PUT, POST, DELETE and PATCH
+<span class="fc" id="L39">        disableHttpMethods(Product.class, config, theUnsupportedActions);</span>
+<span class="fc" id="L40">        disableHttpMethods(ProductCategory.class, config, theUnsupportedActions);</span>
+<span class="fc" id="L41">        disableHttpMethods(Country.class, config, theUnsupportedActions);</span>
+<span class="fc" id="L42">        disableHttpMethods(State.class, config, theUnsupportedActions);</span>
+<span class="fc" id="L43">        disableHttpMethods(Order.class, config, theUnsupportedActions);</span>
+
+        // call an internal helper method
+<span class="fc" id="L46">        exposeIds(config);</span>
+
+        // configure cors mapping
+<span class="fc" id="L49">        cors.addMapping(config.getBasePath() + &quot;/**&quot;).allowedOrigins(theAllowedOrigins);</span>
+<span class="fc" id="L50">    }</span>
+
+    private void disableHttpMethods(Class theClass, RepositoryRestConfiguration config, HttpMethod[] theUnsupportedActions) {
+<span class="fc" id="L53">        config.getExposureConfiguration()</span>
+<span class="fc" id="L54">                .forDomainType(theClass)</span>
+<span class="pc" id="L55">                .withItemExposure((metdata, httpMethods) -&gt; httpMethods.disable(theUnsupportedActions))</span>
+<span class="pc" id="L56">                .withCollectionExposure((metdata, httpMethods) -&gt; httpMethods.disable(theUnsupportedActions));</span>
+<span class="fc" id="L57">    }</span>
+
+    private void exposeIds(RepositoryRestConfiguration config) {
+
+        // expose entity ids
+        //
+
+        // - get a list of all entity classes from the entity manager
+<span class="fc" id="L65">        Set&lt;EntityType&lt;?&gt;&gt; entities = entityManager.getMetamodel().getEntities();</span>
+
+        // - create an array of the entity types
+<span class="fc" id="L68">        List&lt;Class&gt; entityClasses = new ArrayList&lt;&gt;();</span>
+
+        // - get the entity types for the entities
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (EntityType tempEntityType : entities) {</span>
+<span class="fc" id="L72">            entityClasses.add(tempEntityType.getJavaType());</span>
+<span class="fc" id="L73">        }</span>
+
+        // - expose the entity ids for the array of entity/domain types
+<span class="fc" id="L76">        Class[] domainTypes = entityClasses.toArray(new Class[0]);</span>
+<span class="fc" id="L77">        config.exposeIdsFor(domainTypes);</span>
+<span class="fc" id="L78">    }</span>
+}
+
+
+
+
+
+
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
