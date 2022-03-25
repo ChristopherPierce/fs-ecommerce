@@ -17,6 +17,7 @@ com/ecom/ecommerce/controller/CheckoutController.class
 com/ecom/ecommerce/dao/CountryRepository.class
 com/ecom/ecommerce/entity/State.class
 com/ecom/ecommerce/dao/OrderRepository.class
+com/ecom/ecommerce/config/MessageBuilder.class
 com/ecom/ecommerce/entity/Product.class
 com/ecom/ecommerce/SpringBootEcommerceApplication.class
 com/ecom/ecommerce/entity/Country.class
