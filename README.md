@@ -1,3 +1,1 @@
 # fs-ecommerce
-
-first commit
