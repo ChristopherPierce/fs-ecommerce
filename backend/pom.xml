@@ -16,6 +16,8 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<!-- SonarCloud Properties -->
+		
 	</properties>
 
 	<dependencies>
