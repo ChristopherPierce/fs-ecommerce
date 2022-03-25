@@ -17,7 +17,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<!-- SonarCloud Properties -->
-		
+		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 	</properties>
 
 	<dependencies>
