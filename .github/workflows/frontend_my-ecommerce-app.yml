@@ -6,7 +6,7 @@ name: Build and deploy Node.js app to Azure Web App - my-ecommerce-app
 on:
   push:
     branches:
-      - frontend
+      - main
   workflow_dispatch:
 
 jobs:
