@@ -5,7 +5,7 @@ export default {
         issuer: 'https://dev-5165573.okta.com/oauth2/default',
         redirectUri: 'https://my-ecommerce-app.azurewebsites.net/login/callback',
         //redirectUri: 'http://localhost:4200/login/callback',
-        scopes: ['openid', 'profile', 'email']
+        scopes: ['openid', 'profile', 'email', 'groups']
     }
 
 }
