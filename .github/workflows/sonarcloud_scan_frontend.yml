@@ -1,4 +1,4 @@
-name: Build
+name: Sonarcloud Scan Frontend
 on:
   push:
     branches:
@@ -7,6 +7,9 @@ on:
       - 'frontend/**'
   pull_request:
     types: [opened, synchronize, reopened]
+defaults:
+  run:
+    working-directory: ./frontend
 jobs:
   sonarcloud:
     name: SonarCloud
