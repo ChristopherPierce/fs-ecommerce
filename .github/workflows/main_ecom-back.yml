@@ -51,7 +51,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'ecommerce-backend'
+          app-name: 'ecom-back'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C00586AA2AF54A6198EAFAB391448CE3 }}
           package: '*.jar'
